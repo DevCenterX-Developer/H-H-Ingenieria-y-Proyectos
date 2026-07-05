@@ -7,13 +7,12 @@
     "address": "Lima, Perú"
   },
   "firebase": {
-    "apiKey": "AIzaSyD-CzLe28dqO9LFw0CjJfHP2Oauhcs17RM",
-    "authDomain": "augusto-salazar-bondy-6dcda.firebaseapp.com",
-    "projectId": "augusto-salazar-bondy-6dcda",
-    "storageBucket": "augusto-salazar-bondy-6dcda.firebasestorage.app",
-    "messagingSenderId": "680320129663",
-    "appId": "1:680320129663:web:dfdc13fcb6e13907c8bd4a",
-    "measurementId": "G-QRD3HVD90V"
+    "apiKey": "AIzaSyC_9bHAgiaC0Bs1Du_JbGiRUMe54rFiEKU",
+    "authDomain": "h-h-ingenieria-y-proyectos.firebaseapp.com",
+    "projectId": "h-h-ingenieria-y-proyectos",
+    "storageBucket": "h-h-ingenieria-y-proyectos.firebasestorage.app",
+    "messagingSenderId": "418921637168",
+    "appId": "1:418921637168:web:bb5ff6bec9cfc59721d4f5"
   },
   "ai": {
     "provider": "gemini",
