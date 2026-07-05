@@ -1,0 +1,16 @@
+====================================================
+  PLATAFORMA I.E. AUGUSTO SALAZAR BONDY 4015
+  Credenciales de IA — Gemini API
+====================================================
+
+Proveedor : Google Gemini
+Modelo    : gemini-1.5-flash
+API Key   : (ver config.json → sección "ai")
+
+Las keys están partidas en config.json para evitar
+detección automática por GitHub Secret Scanning.
+
+IMPORTANTE: No compartas config.json públicamente.
+Si la key se filtra, regenera en:
+https://aistudio.google.com/app/apikey
+====================================================

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>H&H Ingeniería y Proyectos</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" type="image/png" href="assets/logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="login-page">
+
+  <!-- Loader global -->
+  <div id="global-loader" class="global-loader">
+    <div class="loader-inner">
+      <div class="loader-logo">H&H</div>
+      <div class="loader-spinner"></div>
+      <p>Cargando aula virtual...</p>
+    </div>
+  </div>
+
+  <!-- Notificaciones -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Página principal de login -->
+  <div class="login-wrapper" id="login-wrapper">
+    
+    <!-- Panel izquierdo — identidad institucional -->
+    <div class="login-left">
+      <div class="login-left-content">
+        <div class="school-badge">
+          <img src="assets/logo.png" style="width:44px;height:44px;object-fit:contain;border-radius:10px"/>
+        </div>
+        <h1 class="school-title">H&H<br>Ingeniería y Proyectos</h1>
+        <p class="school-sub">Aula virtual para cursos de dibujo mecánico, AutoCAD y diseño técnico.</p>
+        <div class="school-links">
+          <a href="#" class="social-link">
+            <i class="fas fa-book-open"></i> Sesiones de clase y materiales
+          </a>
+          <a href="#" class="social-link">
+            <i class="fas fa-video"></i> Enlaces de video y recursos
+          </a>
+          <a href="#" class="social-link">
+            <i class="fas fa-clipboard-check"></i> Evaluaciones y seguimiento
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>8+</strong>
+            <span>Módulos</span>
+          </div>
+          <div class="hero-stat">
+            <strong>24/7</strong>
+            <span>Acceso</span>
+          </div>
+          <div class="hero-stat">
+            <strong>100%</strong>
+            <span>En línea</span>
+          </div>
+        </div>
+        <span class="institution-number">H&H</span>
+        <div class="login-deco-circles">
+          <div class="deco-c c1"></div>
+          <div class="deco-c c2"></div>
+          <div class="deco-c c3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel derecho: formularios -->
+    <div class="login-right">
+      <div class="login-card" id="login-card">
+
+        <!-- Selector de rol -->
+        <div id="role-selector" class="auth-section active">
+          <div class="mobile-platform-hero">
+            <h1>H&H Ingeniería y Proyectos</h1>
+            <img src="assets/full.png" alt="H&H Ingeniería y Proyectos" />
+          </div>
+          <div class="auth-header">
+            <div class="welcome-chip"><i class="fas fa-cubes"></i> Aula virtual técnica</div>
+            <h2>Bienvenido</h2>
+            <p>Selecciona tu acceso para continuar</p>
+          </div>
+          <div class="role-buttons">
+            <button class="role-btn student-btn" onclick="selectRole('student')">
+              <div class="role-icon"><i class="fas fa-user-graduate"></i></div>
+              <div class="role-info">
+                <span class="role-title">Soy estudiante</span>
+                <span class="role-desc">Accede a tus cursos, recursos y evaluaciones</span>
+              </div>
+              <i class="fas fa-chevron-right role-arrow"></i>
+            </button>
+
+            <button class="role-btn teacher-btn" onclick="selectRole('teacher')" title="Acceso exclusivo para instructores">
+              <div class="role-icon"><i class="fas fa-tools"></i></div>
+              <div class="role-info">
+                <span class="role-title">Acceso docente</span>
+                <span class="role-desc">Solo para instructores</span>
+              </div>
+              <i class="fas fa-chevron-right role-arrow"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Login Estudiante -->
+        <div id="student-login" class="auth-section">
+          <div class="auth-header">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+            <div class="auth-title-wrap">
+              <div class="auth-avatar student"><i class="fas fa-user-graduate"></i></div>
+              <div>
+                <h2>Estudiante</h2>
+                <p>Ingresa a tu aula virtual</p>
+              </div>
+            </div>
+          </div>
+          <form id="student-login-form" onsubmit="handleStudentLogin(event)">
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="s-email" placeholder="tu@correo.com" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contraseña</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="s-password" placeholder="••••••••" required/>
+                <button type="button" class="toggle-pw" onclick="togglePw('s-password',this)"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary full-width" id="s-login-btn">
+              <span>Ingresar</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+          <div class="auth-footer">
+            <p>¿No tienes cuenta? <a href="#" onclick="showSection('student-register')">Regístrate</a></p>
+            <!-- Estudiantes NO pueden recuperar contraseña -->
+          </div>
+        </div>
+
+        <!-- Registro Estudiante -->
+        <div id="student-register" class="auth-section">
+          <div class="auth-header">
+            <button class="back-btn" onclick="showSection('student-login')"><i class="fas fa-arrow-left"></i></button>
+            <div class="auth-title-wrap">
+              <div class="auth-avatar student"><i class="fas fa-user-graduate"></i></div>
+              <div>
+                <h2>Crear cuenta</h2>
+                <p>Registro de estudiante</p>
+              </div>
+            </div>
+          </div>
+          <form id="student-register-form" onsubmit="handleStudentRegister(event)">
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <div class="input-wrap">
+                <i class="fas fa-user"></i>
+                <input type="text" id="s-name" placeholder="Tu nombre completo" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="s-reg-email" placeholder="tu@correo.com" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contraseña</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="s-reg-password" placeholder="Mínimo 6 caracteres" required minlength="6"/>
+                <button type="button" class="toggle-pw" onclick="togglePw('s-reg-password',this)"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Grado / Sección</label>
+              <div class="input-wrap">
+                <i class="fas fa-chalkboard"></i>
+                <input type="text" id="s-grade" placeholder="Ej: 3ro A"/>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary full-width" id="s-reg-btn">
+              <span>Crear cuenta</span>
+              <i class="fas fa-user-plus"></i>
+            </button>
+          </form>
+          <div class="auth-footer">
+            <p>¿Ya tienes cuenta? <a href="#" onclick="showSection('student-login')">Inicia sesión</a></p>
+          </div>
+        </div>
+
+        <!-- Login Profesor -->
+        <div id="teacher-login" class="auth-section">
+          <div class="auth-header">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+            <div class="auth-title-wrap">
+              <div class="auth-avatar teacher"><i class="fas fa-chalkboard-teacher"></i></div>
+              <div>
+                <h2>Instructor</h2>
+                <p>Gestiona tus cursos y sesiones</p>
+              </div>
+            </div>
+          </div>
+          <form id="teacher-login-form" onsubmit="handleTeacherLogin(event)">
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="t-email" placeholder="tu@correo.com" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contraseña</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="t-password" placeholder="••••••••" required/>
+                <button type="button" class="toggle-pw" onclick="togglePw('t-password',this)"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary full-width" id="t-login-btn">
+              <span>Ingresar</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+          <div class="auth-footer">
+            <p>¿No tienes cuenta? <a href="#" onclick="showSection('teacher-register')">Regístrate</a></p>
+            <p><a href="#" onclick="showSection('recover-password')" class="recover-link"><i class="fas fa-key"></i> Recuperar contraseña</a></p>
+          </div>
+        </div>
+
+        <!-- Registro Profesor -->
+        <div id="teacher-register" class="auth-section">
+          <div class="auth-header">
+            <button class="back-btn" onclick="showSection('teacher-login')"><i class="fas fa-arrow-left"></i></button>
+            <div class="auth-title-wrap">
+              <div class="auth-avatar teacher"><i class="fas fa-chalkboard-teacher"></i></div>
+              <div>
+                <h2>Registro de instructor</h2>
+                <p>Crea tu cuenta para impartir clases</p>
+              </div>
+            </div>
+          </div>
+          <form id="teacher-register-form" onsubmit="handleTeacherRegister(event)">
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <div class="input-wrap">
+                <i class="fas fa-user"></i>
+                <input type="text" id="t-name" placeholder="Tu nombre completo" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="t-reg-email" placeholder="tu@correo.com" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contraseña</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="t-reg-password" placeholder="Mínimo 6 caracteres" required minlength="6"/>
+                <button type="button" class="toggle-pw" onclick="togglePw('t-reg-password',this)"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Especialidad / Curso</label>
+              <div class="input-wrap">
+                <i class="fas fa-book"></i>
+                <input type="text" id="t-specialty" placeholder="Ej: Matemáticas"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Código de acceso docente</label>
+              <div class="input-wrap">
+                <i class="fas fa-shield-alt"></i>
+                <input type="password" id="t-access-code" placeholder="Código proporcionado por dirección" required/>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary full-width" id="t-reg-btn">
+              <span>Crear cuenta</span>
+              <i class="fas fa-chalkboard-teacher"></i>
+            </button>
+          </form>
+          <div class="auth-footer">
+            <p>¿Ya tienes cuenta? <a href="#" onclick="showSection('teacher-login')">Inicia sesión</a></p>
+          </div>
+        </div>
+
+        <!-- Recuperar contraseña (solo profesores/admin) -->
+        <div id="recover-password" class="auth-section">
+          <div class="auth-header">
+            <button class="back-btn" onclick="showSection('teacher-login')"><i class="fas fa-arrow-left"></i></button>
+            <div class="auth-title-wrap">
+              <div class="auth-avatar teacher"><i class="fas fa-key"></i></div>
+              <div>
+                <h2>Recuperar contraseña</h2>
+                <p>Solo para docentes</p>
+              </div>
+            </div>
+          </div>
+          <form id="recover-form" onsubmit="handleRecover(event)">
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="r-email" placeholder="tu@correo.com" required/>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary full-width" id="r-btn">
+              <span>Enviar enlace</span>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+          <div class="auth-footer">
+            <p><a href="#" onclick="showSection('teacher-login')">Volver al inicio de sesión</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

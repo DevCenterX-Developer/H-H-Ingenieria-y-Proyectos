@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel Estudiante — I.E. ASB 4015</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="icon" type="image/png" href="../assets/logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<div id="toast-container" class="toast-container"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon" style="background:white;padding:4px"><img src="../assets/logo.png" style="width:32px;height:32px;object-fit:contain"/></div>
+        <div class="sidebar-logo-text">
+          <div class="school-name">H&H Ingeniería y Proyectos</div>
+          <div class="school-code">Aula virtual técnica</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" id="sidebar-avatar"><i class="fas fa-user"></i></div>
+      <div class="sidebar-profile-info">
+        <div class="profile-name" id="sidebar-name">Cargando...</div>
+        <div class="profile-role">Estudiante</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <button class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <i class="fas fa-home"></i> Inicio
+      </button>
+      <button class="nav-item" data-page="clases" onclick="navigateTo('clases')">
+        <i class="fas fa-chalkboard"></i> Mis cursos
+      </button>
+      <button class="nav-item" data-page="actividades" onclick="navigateTo('actividades')">
+        <i class="fas fa-tasks"></i> Evaluaciones
+        <span class="nav-badge" id="pending-badge" style="display:none">0</span>
+      </button>
+      <button class="nav-item" data-page="calificaciones" onclick="navigateTo('calificaciones')">
+        <i class="fas fa-star"></i> Calificaciones
+      </button>
+      <div class="nav-section-label" style="margin-top:12px">Otros</div>
+      <button class="nav-item" data-page="anuncios" onclick="navigateTo('anuncios')">
+        <i class="fas fa-bullhorn"></i> Anuncios
+      </button>
+      <button class="nav-item" data-page="perfil" onclick="navigateTo('perfil')">
+        <i class="fas fa-user-circle"></i> Mi Perfil
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="theme-btn" onclick="AppUtils.toggleTheme()" title="Cambiar tema (mantén presionado para volver al automático)">
+        <i class="fas fa-moon"></i> Modo oscuro
+      </button>
+      <button class="logout-btn" onclick="AppUtils.logout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="topbar-menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title" id="topbar-title">Inicio</div>
+      <div class="topbar-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Buscar..." id="search-input" oninput="handleSearch(this.value)"/>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <!-- ── DASHBOARD ── -->
+      <div id="page-dashboard" class="page-section">
+        <div class="page-header">
+          <div>
+            <h2 id="welcome-msg">¡Hola!</h2>
+            <p>Tu avance en el curso y tus recursos disponibles</p>
+          </div>
+        </div>
+        <div class="stats-grid" id="student-stats">
+          <div class="stat-card blue">
+            <div class="stat-icon"><i class="fas fa-chalkboard"></i></div>
+            <div class="stat-info"><div class="stat-value" id="stat-classes">0</div><div class="stat-label">Mis cursos</div></div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info"><div class="stat-value" id="stat-pending">0</div><div class="stat-label">Pendientes</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info"><div class="stat-value" id="stat-done">0</div><div class="stat-label">Entregadas</div></div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon"><i class="fas fa-star"></i></div>
+            <div class="stat-info"><div class="stat-value" id="stat-avg">—</div><div class="stat-label">Promedio</div></div>
+          </div>
+        </div>
+        <div class="two-col" style="gap:20px">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-clock" style="color:var(--accent)"></i> Evaluaciones pendientes</h3></div>
+            <div class="card-body">
+              <div class="activity-list" id="dashboard-pending-list">
+                <div class="loading-spinner"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-bullhorn" style="color:var(--primary)"></i> Comunicados del curso</h3></div>
+            <div class="card-body">
+              <div class="announcement-list" id="dashboard-announcements">
+                <div class="loading-spinner"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CLASES ── -->
+      <div id="page-clases" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Mis cursos</h2><p>Los cursos en los que estás inscrito</p></div>
+          <button class="btn-primary" onclick="openModal('join-class-modal')">
+            <i class="fas fa-plus"></i> Unirme a clase
+          </button>
+        </div>
+        <div class="classes-grid" id="student-classes-grid">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+
+      <!-- ── ACTIVIDADES ── -->
+      <div id="page-actividades" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Evaluaciones</h2><p>Tareas, ejercicios y pruebas del curso</p></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select class="form-input" style="width:auto;padding:8px 12px" onchange="filterActivities(this.value)">
+              <option value="all">Todas</option>
+              <option value="pending">Pendientes</option>
+              <option value="submitted">Entregadas</option>
+              <option value="graded">Calificadas</option>
+            </select>
+          </div>
+        </div>
+        <div class="activity-list" id="all-activities-list">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+
+      <!-- ── CALIFICACIONES ── -->
+      <div id="page-calificaciones" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Calificaciones</h2><p>Tu progreso y resultados por módulo</p></div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:0">
+            <table class="grade-table" id="grades-table">
+              <thead>
+                <tr>
+                  <th>Actividad</th><th>Clase</th><th>Entregada</th><th>Nota</th><th>Retroalimentación</th>
+                </tr>
+              </thead>
+              <tbody id="grades-tbody">
+                <tr><td colspan="5" class="loading-spinner" style="padding:30px"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ANUNCIOS ── -->
+      <div id="page-anuncios" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Anuncios</h2><p>Comunicados, sesiones y novedades del curso</p></div>
+        </div>
+        <div class="announcement-list" id="announcements-list">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+
+      <!-- ── PERFIL ── -->
+      <div id="page-perfil" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Mi Perfil</h2><p>Tu información personal</p></div>
+        </div>
+        <div class="card" style="max-width:520px">
+          <div class="card-body" style="text-align:center;padding:32px">
+            <div id="profile-avatar-big" style="width:80px;height:80px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto 16px"></div>
+            <h3 id="profile-name-big" style="font-size:1.2rem;margin-bottom:4px"></h3>
+            <p id="profile-email-big" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:6px"></p>
+            <p id="profile-grade-big" style="color:var(--text-secondary);font-size:0.9rem"></p>
+            <span class="tag tag-blue" style="margin-top:8px">Estudiante</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Unirse a clase -->
+<div class="modal-overlay hidden" id="join-class-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-link"></i> Unirse a una clase</h3>
+      <button class="modal-close" onclick="closeModal('join-class-modal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary);margin-bottom:20px">Ingresa el código de clase que te proporcionó tu profesor.</p>
+      <div class="form-group">
+        <label class="form-label">Código de clase</label>
+        <div class="input-wrap">
+          <i class="fas fa-key"></i>
+          <input type="text" id="join-code-input" class="form-input" style="padding-left:40px;text-transform:uppercase;font-weight:700;letter-spacing:2px" placeholder="Ej: ABC123" maxlength="10"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('join-class-modal')">Cancelar</button>
+      <button class="btn-primary" onclick="joinClass()"><i class="fas fa-check"></i> Unirme</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver actividad y responder -->
+<div class="modal-overlay hidden" id="activity-modal">
+  <div class="modal" style="max-width:760px;display:flex;flex-direction:column;max-height:90vh;">
+    <div class="modal-header">
+      <h3 id="activity-modal-title">Actividad</h3>
+      <button class="modal-close" onclick="closeModal('activity-modal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="activity-modal-body"></div>
+    <div class="modal-footer" id="activity-modal-footer"></div>
+  </div>
+</div>
+
+<!-- Modal: Ver clase -->
+<div class="modal-overlay hidden" id="class-detail-modal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h3 id="class-detail-title">Clase</h3>
+      <button class="modal-close" onclick="closeModal('class-detail-modal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="class-detail-body"></div>
+  </div>
+</div>
+
+<script src="../assets/app-utils.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

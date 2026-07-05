@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel Profesor — I.E. ASB 4015</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="icon" type="image/png" href="../assets/logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<div id="toast-container" class="toast-container"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon" style="background:white;padding:4px"><img src="../assets/logo.png" style="width:32px;height:32px;object-fit:contain"/></div>
+        <div class="sidebar-logo-text">
+          <div class="school-name">H&H Ingeniería y Proyectos</div>
+          <div class="school-code">Panel de instructor</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" id="sidebar-avatar" style="background:var(--secondary-light);color:var(--secondary)"><i class="fas fa-user"></i></div>
+      <div class="sidebar-profile-info">
+        <div class="profile-name" id="sidebar-name">Cargando...</div>
+        <div class="profile-role" style="color:var(--secondary)">Docente</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <button class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i> Inicio</button>
+      <button class="nav-item" data-page="clases" onclick="navigateTo('clases')"><i class="fas fa-chalkboard"></i> Mis cursos</button>
+      <button class="nav-item" data-page="actividades" onclick="navigateTo('actividades')"><i class="fas fa-tasks"></i> Evaluaciones</button>
+      <button class="nav-item" data-page="calificaciones" onclick="navigateTo('calificaciones')"><i class="fas fa-star"></i> Calificaciones</button>
+      <div class="nav-section-label" style="margin-top:12px">Gestión</div>
+      <button class="nav-item" data-page="alumnos" onclick="navigateTo('alumnos')"><i class="fas fa-users"></i> Alumnos</button>
+      <button class="nav-item" data-page="anuncios" onclick="navigateTo('anuncios')"><i class="fas fa-bullhorn"></i> Anuncios</button>
+      <button class="nav-item" data-page="estadisticas" onclick="navigateTo('estadisticas')"><i class="fas fa-chart-bar"></i> Estadísticas</button>
+      <button class="nav-item" data-page="perfil" onclick="navigateTo('perfil')"><i class="fas fa-user-circle"></i> Mi Perfil</button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="theme-btn" onclick="AppUtils.toggleTheme()" title="Cambiar tema (mantén presionado para volver al automático)"><i class="fas fa-moon"></i> Modo oscuro</button>
+      <button class="logout-btn" onclick="AppUtils.logout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="topbar-menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title" id="topbar-title">Inicio</div>
+      <div class="topbar-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Buscar..." id="search-input"/>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- DASHBOARD -->
+      <div id="page-dashboard" class="page-section">
+        <div class="page-header">
+          <div><h2 id="welcome-msg">¡Bienvenido!</h2><p>Resumen de tu actividad como instructor</p></div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="stat-icon"><i class="fas fa-chalkboard"></i></div><div class="stat-info"><div class="stat-value" id="stat-classes">0</div><div class="stat-label">Clases</div></div></div>
+          <div class="stat-card green"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><div class="stat-value" id="stat-students">0</div><div class="stat-label">Alumnos</div></div></div>
+          <div class="stat-card amber"><div class="stat-icon"><i class="fas fa-tasks"></i></div><div class="stat-info"><div class="stat-value" id="stat-activities">0</div><div class="stat-label">Actividades</div></div></div>
+          <div class="stat-card purple"><div class="stat-icon"><i class="fas fa-inbox"></i></div><div class="stat-info"><div class="stat-value" id="stat-pending-grade">0</div><div class="stat-label">Por calificar</div></div></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-inbox" style="color:var(--accent)"></i> Entregas recientes</h3></div>
+            <div class="card-body"><div id="recent-submissions" class="activity-list"><div class="loading-spinner"></div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-chalkboard" style="color:var(--primary)"></i> Mis cursos</h3></div>
+            <div class="card-body"><div id="dashboard-classes-list"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLASES -->
+      <div id="page-clases" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Mis cursos</h2><p>Gestiona tus cursos, sesiones y estudiantes</p></div>
+          <button class="btn-primary" onclick="openModal('create-class-modal')"><i class="fas fa-plus"></i> Nueva clase</button>
+        </div>
+        <div class="classes-grid" id="teacher-classes-grid"><div class="loading-spinner"></div></div>
+      </div>
+
+      <!-- ACTIVIDADES -->
+      <div id="page-actividades" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Evaluaciones</h2><p>Crea y gestiona ejercicios, tareas y pruebas</p></div>
+          <button class="btn-primary" onclick="editingActivityId=null;document.querySelector('#create-activity-modal .modal-header h3').innerHTML='<i class=\'fas fa-tasks\'></i> Nueva Actividad';openModal('create-activity-modal')"><i class="fas fa-plus"></i> Nueva actividad</button>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-body" style="padding:14px 20px;display:flex;gap:12px;flex-wrap:wrap">
+            <select class="form-input" style="width:auto;flex:1;min-width:160px" id="activity-class-filter" onchange="filterTeacherActivities()">
+              <option value="">Todas las clases</option>
+            </select>
+            <select class="form-input" style="width:auto" onchange="filterTeacherActivities()" id="activity-status-filter">
+              <option value="">Todos los estados</option>
+              <option value="published">Publicadas</option>
+              <option value="draft">Borradores</option>
+            </select>
+          </div>
+        </div>
+        <div class="activity-list" id="teacher-activities-list"><div class="loading-spinner"></div></div>
+      </div>
+
+      <!-- CALIFICACIONES -->
+      <div id="page-calificaciones" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Calificaciones</h2><p>Revisa y evalúa las entregas de tus estudiantes</p></div>
+          <select class="form-input" style="width:auto" id="grade-class-filter" onchange="loadSubmissionsForGrading()">
+            <option value="">Todas las clases</option>
+          </select>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:0">
+            <table class="grade-table">
+              <thead><tr><th>Alumno</th><th>Actividad</th><th>Entregada</th><th>Nota</th><th>Acciones</th></tr></thead>
+              <tbody id="submissions-tbody"><tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-muted)">Cargando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALUMNOS -->
+      <div id="page-alumnos" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Estudiantes</h2><p>Lista de estudiantes por curso</p></div>
+          <select class="form-input" style="width:auto" id="students-class-filter" onchange="loadStudentsForClass(this.value)">
+            <option value="">Selecciona una clase</option>
+          </select>
+        </div>
+        <div class="students-list" id="students-list">
+          <div class="empty-state"><div class="empty-icon"><i class="fas fa-users"></i></div><h3>Selecciona una clase</h3><p>Elige una clase para ver los alumnos inscritos.</p></div>
+        </div>
+      </div>
+
+      <!-- ANUNCIOS -->
+      <div id="page-anuncios" class="page-section hidden">
+        <div class="page-header">
+          <div><h2>Anuncios</h2><p>Publica comunicados, enlaces y novedades del curso</p></div>
+          <button class="btn-primary" onclick="openModal('create-announcement-modal')"><i class="fas fa-plus"></i> Nuevo anuncio</button>
+        </div>
+        <div class="announcement-list" id="teacher-announcements-list"><div class="loading-spinner"></div></div>
+      </div>
+
+      <!-- ESTADÍSTICAS -->
+      <div id="page-estadisticas" class="page-section hidden">
+        <div class="page-header"><div><h2>Estadísticas</h2><p>Progreso de tus alumnos</p></div></div>
+        <div class="stats-grid" id="extended-stats">
+          <div class="stat-card blue"><div class="stat-icon"><i class="fas fa-file-alt"></i></div><div class="stat-info"><div class="stat-value" id="total-submissions">0</div><div class="stat-label">Entregas totales</div></div></div>
+          <div class="stat-card green"><div class="stat-icon"><i class="fas fa-check"></i></div><div class="stat-info"><div class="stat-value" id="total-graded">0</div><div class="stat-label">Calificadas</div></div></div>
+          <div class="stat-card amber"><div class="stat-icon"><i class="fas fa-percentage"></i></div><div class="stat-info"><div class="stat-value" id="completion-rate">0%</div><div class="stat-label">Tasa de entrega</div></div></div>
+          <div class="stat-card purple"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-info"><div class="stat-value" id="class-avg">—</div><div class="stat-label">Promedio general</div></div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>Alumnos con mayor progreso</h3></div>
+          <div class="card-body"><div id="top-students-list"></div></div>
+        </div>
+      </div>
+
+      <!-- PERFIL -->
+      <div id="page-perfil" class="page-section hidden">
+        <div class="page-header"><div><h2>Mi Perfil</h2></div></div>
+        <div class="card" style="max-width:520px">
+          <div class="card-body" style="text-align:center;padding:32px">
+            <div id="profile-avatar-big" style="width:80px;height:80px;border-radius:50%;background:var(--secondary-light);color:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto 16px"></div>
+            <h3 id="profile-name-big" style="font-size:1.2rem;margin-bottom:4px"></h3>
+            <p id="profile-email-big" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:6px"></p>
+            <p id="profile-specialty-big" style="color:var(--text-secondary);font-size:0.9rem"></p>
+            <span class="tag tag-green" style="margin-top:8px">Docente</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Crear clase -->
+<div class="modal-overlay hidden" id="create-class-modal">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="fas fa-plus"></i> Nueva Clase</h3><button class="modal-close" onclick="closeModal('create-class-modal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nombre del curso *</label><input type="text" id="new-class-name" class="form-input" placeholder="Ej: AutoCAD Básico"/></div>
+      <div class="form-group"><label class="form-label">Módulo / tema</label><input type="text" id="new-class-subject" class="form-input" placeholder="Ej: Dibujo mecánico"/></div>
+      <div class="form-group"><label class="form-label">Descripción</label><textarea id="new-class-desc" class="form-input" placeholder="Describe la sesión, los recursos y el objetivo del curso..." rows="3"></textarea></div>
+      <div class="form-group">
+        <label class="form-label">Código de clase (se genera automáticamente)</label>
+        <div style="display:flex;gap:10px">
+          <input type="text" id="new-class-code" class="form-input" style="font-weight:700;letter-spacing:2px;text-transform:uppercase" placeholder="Se genera automático"/>
+          <button type="button" class="btn-secondary" onclick="document.getElementById('new-class-code').value = AppUtils.generateClassCode()"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('create-class-modal')">Cancelar</button>
+      <button class="btn-primary" onclick="createClass()"><i class="fas fa-check"></i> Crear clase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver clase detalle (profesor) -->
+<div class="modal-overlay hidden" id="class-manage-modal">
+  <div class="modal" style="max-width:760px">
+    <div class="modal-header">
+      <h3 id="class-manage-title">Clase</h3>
+      <button class="modal-close" onclick="closeModal('class-manage-modal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="class-manage-body"></div>
+  </div>
+</div>
+
+<!-- Modal: Crear actividad -->
+<div class="modal-overlay hidden" id="create-activity-modal">
+  <div class="modal" style="max-width:800px">
+    <div class="modal-header"><h3><i class="fas fa-tasks"></i> Nueva Actividad</h3><button class="modal-close" onclick="closeModal('create-activity-modal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="two-col">
+        <div class="form-group"><label class="form-label">Título *</label><input type="text" id="act-title" class="form-input" placeholder="Título de la actividad"/></div>
+        <div class="form-group"><label class="form-label">Clase *</label>
+          <select id="act-class" class="form-input"><option value="">Selecciona una clase</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Descripción / Instrucciones</label><textarea id="act-desc" class="form-input" rows="3" placeholder="Instrucciones para los estudiantes..."></textarea></div>
+      <div class="two-col">
+        <div class="form-group"><label class="form-label">Fecha de entrega</label><input type="datetime-local" id="act-due" class="form-input"/></div>
+        <div class="form-group"><label class="form-label">Puntuación máxima</label><input type="number" id="act-score" class="form-input" value="20" min="1" max="100"/></div>
+      </div>
+      <hr class="divider"/>
+      <div class="section-title">Preguntas de la actividad</div>
+      <div id="questions-builder" class="question-builder"></div>
+      <div class="add-question-menu" style="margin-top:12px">
+        <button type="button" class="add-q-btn" onclick="addQuestion('open')"><i class="fas fa-align-left"></i> Respuesta abierta</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('multiple')"><i class="fas fa-dot-circle"></i> Opción múltiple</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('checkbox')"><i class="fas fa-check-square"></i> Casillas</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('truefalse')"><i class="fas fa-toggle-on"></i> V / F</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('text')"><i class="fas fa-info-circle"></i> Texto informativo</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('image')"><i class="fas fa-image"></i> Imagen</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('video')"><i class="fas fa-video"></i> Video (URL)</button>
+        <button type="button" class="add-q-btn" onclick="addQuestion('link')"><i class="fas fa-link"></i> Enlace</button>
+      </div>
+      <hr class="divider"/>
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <div style="display:flex;gap:12px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="radio" name="act-publish" value="draft" checked/> Borrador</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="radio" name="act-publish" value="published"/> Publicar ahora</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('create-activity-modal')">Cancelar</button>
+      <button class="btn-primary" onclick="saveActivity()"><i class="fas fa-save"></i> Guardar actividad</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Calificar entrega -->
+<div class="modal-overlay hidden" id="grade-modal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header"><h3 id="grade-modal-title">Calificar entrega</h3><button class="modal-close" onclick="closeModal('grade-modal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="grade-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('grade-modal')">Cancelar</button>
+      <button class="btn-primary" id="save-grade-btn" onclick="saveGrade()"><i class="fas fa-check"></i> Guardar calificación</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Nuevo anuncio -->
+<div class="modal-overlay hidden" id="create-announcement-modal">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="fas fa-bullhorn"></i> Nuevo Anuncio</h3><button class="modal-close" onclick="closeModal('create-announcement-modal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Título *</label><input type="text" id="ann-title" class="form-input" placeholder="Título del anuncio"/></div>
+      <div class="form-group"><label class="form-label">Contenido *</label><textarea id="ann-content" class="form-input" rows="5" placeholder="Escribe el anuncio..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('create-announcement-modal')">Cancelar</button>
+      <button class="btn-primary" onclick="createAnnouncement()"><i class="fas fa-paper-plane"></i> Publicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Subir recurso -->
+<div class="modal-overlay hidden" id="upload-resource-modal">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="fas fa-link"></i> Añadir Recurso (URL)</h3><button class="modal-close" onclick="closeModal('upload-resource-modal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nombre del recurso</label><input type="text" id="resource-name" class="form-input" placeholder="Ej: Guía de estudio unidad 1"/></div>
+      <div class="form-group"><label class="form-label">URL del recurso *</label><input type="url" id="resource-url" class="form-input" placeholder="Ej: https://drive.google.com/..." /></div><div class="form-group"><label class="form-label">Tipo de recurso</label><select id="resource-type" class="form-input"><option value="PDF">PDF</option><option value="Imagen">Imagen</option><option value="Video">Video</option><option value="Documento">Documento</option><option value="Enlace">Enlace web</option></select></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('upload-resource-modal')">Cancelar</button>
+      <button class="btn-primary" onclick="uploadResource()"><i class="fas fa-save"></i> Guardar recurso</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/app-utils.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "school": {
+    "name": "H&H Ingeniería y Proyectos",
+    "shortName": "H&H",
+    "facebook": "https://www.hhyproyectos.com",
+    "location": "https://www.hhyproyectos.com/contacto",
+    "address": "Lima, Perú"
+  },
+  "firebase": {
+    "apiKey": "AIzaSyD-CzLe28dqO9LFw0CjJfHP2Oauhcs17RM",
+    "authDomain": "augusto-salazar-bondy-6dcda.firebaseapp.com",
+    "projectId": "augusto-salazar-bondy-6dcda",
+    "storageBucket": "augusto-salazar-bondy-6dcda.firebasestorage.app",
+    "messagingSenderId": "680320129663",
+    "appId": "1:680320129663:web:dfdc13fcb6e13907c8bd4a",
+    "measurementId": "G-QRD3HVD90V"
+  },
+  "ai": {
+    "provider": "gemini",
+    "apiKey": ["AIzaS", "yBLwSL", "MiKqGBcuRNvno", "PEV6i2CM6RuHmZQ"],
+    "model": "gemini-2.5-flash",
+    "enabled": true
+  },
+  "app": {
+    "version": "1.1.0",
+    "teacherCode": "HHPROYECTOS",
+    "useStorage": false,
+    "darkModeDefault": false,
+    "language": "es",
+    "maxFileSize": 10485760,
+    "allowedFileTypes": ["pdf", "jpg", "jpeg", "png", "mp4", "webm"]
+  }
+}
